@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Data Analytics Weather Project">
+    <meta name="author" content="Mark Groner">
+
+    <title>Latitudinal Weather Analysis</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="yeti.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 62px;
+        }
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href=".\index.html"> Latitudinal Weather Analysis </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-haspopup="true" aria-expanded="false">Graphs and Analysis</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href=".\temperature.html">Temperature</a>
+                <a class="dropdown-item" href=".\humidity.html">Humidity</a>
+                <a class="dropdown-item" href=".\cloudiness.html">Cloud Coverage</a>
+                <a class="dropdown-item" href=".\wind-speed.html">Wind Speed</a>
+                <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href=".\comparison.html">All Graphs</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href=".\data.html">Data</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-md-7 wrapped-box">
+          <div class="row">
+            <div class="row">
+              <h2 class="move-header-left"> Project Purpose and Motivation </h2>
+            </div>
+            <hr>
+            <div>
+              <a href=".\temperature.html" class="float-left move-image-left">
+                  <img border="0" alt="max_temp" src="project_viz\temperature.png" width="300px">
+              </a>
+              <div>
+                <p class="right-margin">
+                  This project analyzes how weather changes in relation to distance from
+                  the equator.  Specifically, this site examines how latitude effects four
+                  measures of climate:
+                </p>
+                <ul class="landing-page-list">
+                  <li> temperature </li>
+                  <li> humidity </li>
+                  <li> cloud coverage </li>
+                  <li> wind speed </li>
+                </ul>
+                <p class="move-p-left right-margin">
+                  Click on any of the visualizations on this page to read about
+                  what was learned during this analysis.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-1"></div>
+        <div class="row side-plots-buffer"></div>
+        <div class="col-xs-12 col-md-4 wrapped-box side-plots">
+          <div class="row">
+            <h4 class="move-header-left"> Analysis and Visualizations </h4>
+            <hr>
+          </div>
+          <div class="col-xs-6 move-image-left">
+            <a href=".\temperature.html">
+              <img class="side-grid-graphs" border="0" alt="max_temp" src="project_viz\temperature.png">
+            </a>
+            <a href=".\humidity.html">
+              <img class="side-grid-graphs" border="0" alt="humidity" src="project_viz\humidity.png">
+            </a>
+          </div>
+          <div class="col-xs-6 move-image-left">
+            <a href=".\cloudiness.html">
+              <img class="side-grid-graphs" border="0" alt="cloudiness" src="project_viz\cloudiness.png">
+            </a>
+            <a href=".\wind-speed.html">
+              <img class="side-grid-graphs" border="0" alt="wind-speed" src="project_viz\wind-speed.png">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  </body>
+
+</html>
