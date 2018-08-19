@@ -24,11 +24,11 @@ from flask_sqlalchemy import SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "sqlite:///pub_atx.sqlite"
 app.config['GOOGLE_API_KEY'] = os.environ.get('GOOGLE_API_KEY', '') or ''
 app.config['QUANDL_API_KEY'] = os.environ.get('QUANDL_API_KEY', '') or ''
-'''
+
 
 db = SQLAlchemy(app)
 from .models import Company,company_columns,CompanyPrcsDaily,CompanyPrcsMnthly
-
+'''
 
 @app.route('/')
 def home():
@@ -43,3 +43,7 @@ def nba_home():
 @app.route('/nba/lineup_comparison')
 def lineup_comparison():
     return render_template('lineup_comparison.html')
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
