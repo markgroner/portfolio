@@ -1,15 +1,22 @@
 import requests
 import pandas as pd
 import json
-from config import headers
+from config import nba_headers
 
 
-def get_nba_com_dataframe(url, params, headers):
-    response = requests.get(url, params=params, headers=headers, timeout=30)
+def nba_get_request(api_route, params):
+    base_url = 'http://stats.nba.com/stats/'
+    url = f'{base_url}{api_route}'
+    print(nba_headers)
+    response = requests.get(url, params=params, headers=nba_headers)
     print(f'    CONNECTING TO - {url}')
-    print(f'    {response.url}')
-    print(f'    {response.status_code}')
+    print(f'    RESPONSE URL - {response.url}')
+    print(f'    RESPONSE STATUS - {response.status_code}')
     json_data = response.json()
+    return json_data
+
+
+def nba_json_to_df(json_data):
     if 'resultSets' in json_data.keys():
         result_set_json = json_data['resultSets']
     elif 'resultSet' in json_data.keys():
@@ -28,6 +35,7 @@ def get_nba_com_dataframe(url, params, headers):
     else:
         return main_response_df
 
+
 def add_season_column(nba_df, season_string):
     nba_df['SEASON'] = season_string
     nba_df_columns = nba_df.columns.values.tolist()
@@ -38,7 +46,7 @@ def add_season_column(nba_df, season_string):
 
 
 
-teams_url = 'http://stats.nba.com/stats/leaguedashteamstats'
+teams_route = 'leaguedashteamstats'
 teams_params = {'Conference': '',
                 'DateFrom': '',
                 'DateTo': '',
@@ -70,25 +78,26 @@ teams_params = {'Conference': '',
                 'VsDivision': ''
                 }
 
-## teams_df = get_nba_com_dataframe(teams_url, teams_params, headers)
+## teams_json = nba_get_request(teams_route, teams_params)
+## teams_df = nba_json_to_df(nba_json)
 ## print(teams_df)
 ## print(teams_df.columns)
 
 cavs_2017_18_team_id = 1610612739
-rosters_url = 'http://stats.nba.com/stats/commonteamroster'
+rosters_route = 'commonteamroster'
 rosters_params = {'LeagueID': '00',
                     'Season': '2017-18',
                     'TeamID': cavs_2017_18_team_id
                     }
 
-## roster_df, coaches_df = get_nba_com_dataframe(rosters_url, rosters_params, headers)
+## roster_df, coaches_df = get_nba_com_dataframe(rosters_route, rosters_params)
 ## print(roster_df)
 ## print(coaches_df)
 
 
 kyrie_player_id = 202681
 cavs_2017_18_team_id = 1610612739
-shots_url = 'http://stats.nba.com/stats/shotchartdetail'
+shots_route = 'shotchartdetail'
 shots_params = {'PlayerID': kyrie_player_id,
                 'PlayerPosition': '',
                 'Season': '2017-18',
@@ -114,13 +123,13 @@ shots_params = {'PlayerID': kyrie_player_id,
                 }
 
 '''
-player_shots_df, league_average_shots_df = get_nba_com_dataframe(shots_url, shots_params, headers)
+player_shots_df, league_average_shots_df = get_nba_com_dataframe(shots_route, shots_params)
 print(player_shots_df)
 print(league_average_shots_df)
 '''
 
 
-players_url = 'http://stats.nba.com/stats/leaguedashplayerstats'
+players_route = 'leaguedashplayerstats'
 players_params = {'College': '',
                     'Conference': '',
                     'Country': '',
@@ -159,5 +168,5 @@ players_params = {'College': '',
                     }
 
 
-## players_df = get_nba_com_dataframe(players_url, players_params, headers)
+## players_df = get_nba_com_dataframe(players_route, players_params)
 ## print(players_df)
