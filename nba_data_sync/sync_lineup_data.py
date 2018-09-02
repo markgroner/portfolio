@@ -35,15 +35,15 @@ def lineup_df_to_database(table_name, lineup_df):
     ## Create new `tickets` table with most recent ticket data
     lineup_df.to_sql(table_name, engine, index=False, if_exists='replace')
     with engine.connect() as conn:
-        conn.execute(f'ALTER TABLE team_colors ADD PRIMARY KEY (id);')
+        conn.execute(f'ALTER TABLE {table_name} ADD PRIMARY KEY (id);')
         ## conn.execute(f'ALTER TABLE team_colors ADD FOREIGN KEY (lineup_id) REFERENCES lineup(id);')
         conn.close()
+        print(f'    SUCCESSFULLY UPDATED {table_name}'
 
 
 lineup_path = 'leaguedashlineups'
 
 
-from pprint import pprint
 
 
 for lineup_table in lineup_table_names:
@@ -81,4 +81,6 @@ for lineup_table in lineup_table_names:
                                 'VsDivision': ''}
     lineup_json = nba_api.nba_get_request(lineup_path, lineup_stats_parameters)
     lineup_df = nba_api.nba_json_to_df(lineup_json)
+    lineup_df.reset_index(inplace=True)
+    lineup_df.rename(columns={'index': 'id'}, inplace=True)
     lineup_df_to_database(lineup_table, lineup_df)
