@@ -49,7 +49,7 @@ function plotNbaGroupedBar(error, data, graphDivId) {
     .selectAll("g")
     .data(graphData)
     .enter().append("g")
-      .attr("transform", function(d) { return "translate(" + x0(d.teamAbbreviation) + ",0)"; })
+      .attr("transform", function(d) { return `translate(${x0(d.teamAbbreviation)},0)`; })
     .selectAll("rect")
     .data(function(d) { return statKeys.map(function(key) { return {key: key, value: d[key]}; }); })
     .enter().append("rect")
@@ -61,8 +61,9 @@ function plotNbaGroupedBar(error, data, graphDivId) {
 
   g.append("g")
       .attr("class", "axis")
-      .attr("transform", "translate(0," + chartHeight + ")")
-      .call(d3.axisBottom(x0));
+      .attr("transform", `translate(0,${chartHeight})`)
+      .call(d3.axisBottom(x0))
+      .attr("font-weight", "bold");
 
 
   g.append("g")
@@ -78,55 +79,26 @@ function plotNbaGroupedBar(error, data, graphDivId) {
       .attr("text-anchor", "start")
       .text(chartTitle);
 
-/*
-  var legend = g.append("g")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .attr("text-anchor", "end")
-    .selectAll("g")
-    .data(statKeys.slice())
-    .enter().append("g")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-
-
-  legend.append("rect")
-      .attr("x", chartWidth - 19)
-      .attr("width", 19)
-      .attr("height", 19)
-      .attr("fill", colors);
-
-
-  legend.append("text")
-      .attr("x", chartWidth - 24)
-      .attr("y", 9.5)
-      .attr("dy", "0.32em")
-      .text(function(d) { return d; });
-*/
- var width = 500;
- var height = 75;
- var svgw = 20;
- var svgh = 20;
- var dataL = 0;
- var offset = 80;
  var legendColorBoxSize = 15;
  var legendPaddingY = chartMargins.bottom - chartMargins.top;
  var legendPaddingX = svgWidth*.25;
+ var legendKeysOffset = svgWidth*.2;
 
   var legend = svg.append("g")
-      .attr("width", width)
-      .attr("height", height - 50)
+      .attr("width", svgWidth)
+      .attr("height", legendPaddingY - 50)
       .selectAll("g")
       .data(statKeys)
         .enter().append("g")
         .attr("class", "legend")
         .attr("transform", function (d, i) {
          if (i === 0) {
-            dataL = d.length + offset
+            dataL = d.length + legendKeysOffset
             return "translate(0,0)"
         } else {
          var newdataL = dataL
-         dataL +=  d.length + offset
+         dataL +=  d.length + legendKeysOffset
          return `translate(${newdataL},0)`
         }
   })
