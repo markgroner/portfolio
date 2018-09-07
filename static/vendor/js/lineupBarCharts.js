@@ -4,7 +4,7 @@ function plotNbaGroupedBar(error, data, graphDivId) {
 
   if (error) throw error;
 
-  var chartTitle = "Scoring";
+
   var barGraphDiv = d3.select(graphDivId);
   var svgHeight = barGraphDiv.node().getBoundingClientRect().height;
   var svgWidth = barGraphDiv.node().getBoundingClientRect().width;
@@ -19,12 +19,11 @@ function plotNbaGroupedBar(error, data, graphDivId) {
 
 
   var g = svg.append("g").attr("transform", "translate(" + chartMargins.left + "," + chartMargins.top + ")");
-  var teamAbbreviations = data.team_abbreviations;
-  var statKeys = data.stat_keys;
+  var teamAbbreviations = data.teamAbbreviations;
+  var statKeys = data.statKeys;
   var graphData = data.graphData;
+  var graphTitle = data.graphTitle;
   console.log(teamAbbreviations);
-  console.log(statKeys);
-  console.log(graphData);
 
   // scale x to chart
   var x0 = d3.scaleBand()
@@ -70,14 +69,15 @@ function plotNbaGroupedBar(error, data, graphDivId) {
       .attr("class", "axis")
       .call(d3.axisLeft(y).ticks(5, "p"))
     .append("text")
-      .attr("x", 8)
-      .attr("y", y(y.ticks().pop()) + 0.5)
-      .attr("dy", "0.32em")
+    .style("text-anchor", "middle")
+      .attr("x", chartWidth*.5)
+      .attr("y", 0)
+      //.attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
       .attr("font-size", "14")
       .attr("text-anchor", "start")
-      .text(chartTitle);
+      .text(graphTitle);
 
 
  var legendColorBoxSize = 15;
@@ -116,9 +116,7 @@ function plotNbaGroupedBar(error, data, graphDivId) {
       .attr("x", legendPaddingX + 20)
       .attr("y", svgHeight - legendPaddingY + 10)
   .attr("dy", ".1em")
-  .text(function (d, i) {
-      return d
-  })
+  .text(function (d, i) { return d })
   .attr("class", "textselected")
   .style("text-anchor", "start")
           .attr("font-family", "sans-serif")
@@ -131,7 +129,7 @@ function plotNbaGroupedBar(error, data, graphDivId) {
 
 
 
-/* SCORING GRAPH */
+/* SHOOTING GRAPH */
 d3.json("../static/nba-grouped-bar-data.json", function(error, data) {
-  plotNbaGroupedBar(error, data, "#scoring_graph");
+  plotNbaGroupedBar(error, data, "#shooting_graph");
 });
