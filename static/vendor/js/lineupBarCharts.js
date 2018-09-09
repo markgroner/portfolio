@@ -1,6 +1,6 @@
 
 
-function plotNbaGroupedBar(error, data, graphDivId) {
+function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
 
   if (error) throw error;
 
@@ -23,7 +23,6 @@ function plotNbaGroupedBar(error, data, graphDivId) {
   var statKeys = data.statKeys;
   var graphData = data.graphData;
   var graphTitle = data.graphTitle;
-  console.log(teamAbbreviations);
 
   // scale x to chart
   var x0 = d3.scaleBand()
@@ -67,7 +66,7 @@ function plotNbaGroupedBar(error, data, graphDivId) {
 
   g.append("g")
       .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(5, "p"))
+      .call(d3.axisLeft(y).ticks(5, yAxisMeasure))
     .append("text")
     .style("text-anchor", "middle")
       .attr("x", chartWidth*.5)
@@ -127,9 +126,31 @@ function plotNbaGroupedBar(error, data, graphDivId) {
 
 
 
+/* RATINGS GRAPH */
+d3.json("../nba/grouped-bar-data?graphTitle=Ratings", function(error, data) {
+  plotNbaGroupedBar(error, data, "#ratings_graph", "d");
+});
+
+/* SHOOTING GRAPH */
+d3.json("../nba/grouped-bar-data?graphTitle=Shooting", function(error, data) {
+  plotNbaGroupedBar(error, data, "#shooting_graph", "p");
+});
+
+/* SCORING GRAPH */
+d3.json("../nba/grouped-bar-data?graphTitle=Scoring", function(error, data) {
+  plotNbaGroupedBar(error, data, "#scoring_graph", "p");
+});
+
+/* REBOUNDING GRAPH */
+d3.json("../nba/grouped-bar-data?graphTitle=Rebounding", function(error, data) {
+  console.log('here')
+  plotNbaGroupedBar(error, data, "#rebounding_graph", "p");
+});
+
+
 
 
 /* SHOOTING GRAPH */
 d3.json("../static/nba-grouped-bar-data.json", function(error, data) {
-  plotNbaGroupedBar(error, data, "#shooting_graph");
+  plotNbaGroupedBar(error, data, "#sample_data_graph", "p");
 });
