@@ -34,9 +34,19 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
       .padding(0.05)
       .domain(statKeys).rangeRound([0, x0.bandwidth()]);
 
+  var yMinValue = d3.min(graphData, function(d) { return d3.min(statKeys, function(key) { return d[key]; }); });
+  if (yMinValue < 0) {
+    var yAxisMin = yMinValue;
+  } else {
+    var yAxisMin = 0;
+  }
+
   var y = d3.scaleLinear()
       .rangeRound([chartHeight, 0])
-      .domain([0, d3.max(graphData, function(d) { return d3.max(statKeys, function(key) { return d[key]; }); })]).nice();
+      .domain([
+        yAxisMin,
+        d3.max(graphData, function(d) { return d3.max(statKeys, function(key) { return d[key]; }); })]).nice();
+
 
   var colors = d3.scaleOrdinal()
       .range(["#0046AD", "#D6D6C9", "#D0103A"]);
@@ -52,26 +62,45 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
     .data(function(d) { return statKeys.map(function(key) { return {key: key, value: d[key]}; }); })
     .enter().append("rect")
       .attr("x", function(d) { return x1(d.key); })
-      .attr("y", function(d) { return y(d.value); })
+      .attr("y", function(d) {
+          return d.value > 0 ? y(d.value) : y(0);
+      })
       .attr("width", x1.bandwidth())
-      .attr("height", function(d) { return chartHeight - y(d.value); })
+      .attr("height", function(d) {
+          return d.value > 0 ? y(0) - y(d.value) : y(d.value) - y(0);
+      })
       .attr("fill", function(d) { return colors(d.key); });
 
   g.append("g")
       .attr("class", "axis")
+      .attr("transform", `translate(0,${chartHeight + yAxisMin})`)
+      .call(d3.axisBottom(x0)
+        .tickSizeInner(0)
+        .tickSizeOuter(0))
+      .selectAll("text").remove();
+
+  g.append("g")
+      .attr("class", "axis")
       .attr("transform", `translate(0,${chartHeight})`)
-      .call(d3.axisBottom(x0))
-      .attr("font-weight", "bold");
+      .call(d3.axisBottom(x0)
+        .tickSizeInner(0)
+        .tickSizeOuter(0))
+      .attr("font-weight", "bold")
+
+      .select(".domain").remove();
 
 
   g.append("g")
       .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(5, yAxisMeasure))
-    .append("text")
+      .call(d3.axisLeft(y)
+        .ticks(5, yAxisMeasure)
+        .tickSizeInner(3)
+        .tickSizeOuter(0));
+
+  g.append("text")
     .style("text-anchor", "middle")
       .attr("x", chartWidth*.5)
       .attr("y", 0)
-      //.attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
       .attr("font-size", "14")
@@ -143,7 +172,6 @@ d3.json("../nba/grouped-bar-data?graphTitle=Scoring", function(error, data) {
 
 /* REBOUNDING GRAPH */
 d3.json("../nba/grouped-bar-data?graphTitle=Rebounding", function(error, data) {
-  console.log('here')
   plotNbaGroupedBar(error, data, "#rebounding_graph", "p");
 });
 
