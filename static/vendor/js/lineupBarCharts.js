@@ -41,33 +41,44 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
     var yAxisMin = 0;
   }
 
+
+  if (yAxisMeasure == "p") {
+    var yAxisMax = 1;
+    var yAxisTickValues = [0, .25, .5, .75, 1];
+    var yAxisFormat = ".0%";
+  } else {
+    var yAxisMax = d3.max(graphData, function(d) { return d3.max(statKeys, function(key) { return d[key]; }); });
+    console.log(yAxisMax);
+    if ((yAxisMin < -20) & (yAxisMin > 135)) {
+      var yAxisTickValues = [-25, 0, 50, 100, 150];
+    } else if ((yAxisMin < -20) & (yAxisMin > 135)) {
+      var yAxisTickValues = [-25, 0, 50, 100, 150];
+    } else if ((yAxisMin > -20) & (yAxisMin > 135)) {
+      var yAxisTickValues = [0, 50, 100, 125, 150];
+    } else if ((yAxisMin > -20) & (yAxisMin < 135)) {
+      var yAxisTickValues = [0, 50, 100];
+    }
+    var yAxisFormat = "";
+  }
+
   var y = d3.scaleLinear()
       .rangeRound([chartHeight, 0])
-      .domain([
-        yAxisMin,
-        d3.max(graphData, function(d) { return d3.max(statKeys, function(key) { return d[key]; }); })]).nice();
+      .domain([yAxisMin, yAxisMax]).nice();
 
 
   var colors = d3.scaleOrdinal()
       .range(["#0046AD", "#D6D6C9", "#D0103A"]);
 
   // format y axis and horizontal grid lines
-  // y axis
   g.append("g")
-      .attr("class", "axis")
-      .call(d3.axisLeft(y)
-        .ticks(5, yAxisMeasure)
-        .tickSize(0))
-  // horizontal gridlines
-  .append("g")
       .attr("class", "gridline")
       .attr("stroke-width", ".25px")
       .call(d3.axisLeft(y)
-        .ticks(5, yAxisMeasure)
-        .tickFormat("")
+        .tickValues(yAxisTickValues)
+        .tickFormat(d3.format(yAxisFormat))
         .tickSizeInner(-chartWidth)
         .tickSizeOuter(0))
-      ;
+      .select(".domain").remove();
 
 
   // format x axis
@@ -188,5 +199,5 @@ d3.json("../nba/grouped-bar-data?graphTitle=Rebounding", function(error, data) {
 
 /* SHOOTING GRAPH */
 d3.json("../static/nba-grouped-bar-data.json", function(error, data) {
-  plotNbaGroupedBar(error, data, "#sample_data_graph", "p");
+  plotNbaGroupedBar(error, data, "#sample_data_graph", "d");
 });
