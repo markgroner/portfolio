@@ -13,7 +13,7 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
         .attr("height", svgHeight)
         .attr("width", svgWidth)
 
-  var chartMargins = {top: svgHeight*.1, right: svgWidth*.1, bottom: svgHeight*.2, left: svgWidth*.1};
+  var chartMargins = {top: svgHeight*.125, right: svgWidth*.1, bottom: svgHeight*.2, left: svgWidth*.1};
   var chartWidth = +svg.attr("width") - chartMargins.left - chartMargins.right;
   var chartHeight = +svg.attr("height") - chartMargins.top - chartMargins.bottom;
 
@@ -51,8 +51,47 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
   var colors = d3.scaleOrdinal()
       .range(["#0046AD", "#D6D6C9", "#D0103A"]);
 
+  // format y axis and horizontal grid lines
+  // y axis
+  g.append("g")
+      .attr("class", "axis")
+      .call(d3.axisLeft(y)
+        .ticks(5, yAxisMeasure)
+        .tickSizeInner(3)
+        .tickSizeOuter(0))
+  // horizontal gridlines
+  .append("g")
+      .attr("class", "gridline")
+      .attr("stroke", "#777")
+      .attr("stroke-width", ".25px")
+      .call(d3.axisLeft(y)
+        .ticks(5, yAxisMeasure)
+        .tickFormat("")
+        .tickSizeInner(-chartWidth)
+        .tickSizeOuter(0))
+      ;
 
 
+  // format x axis
+  // x axis without ticks
+  g.append("g")
+      .attr("class", "axis")
+      .attr("transform", `translate(0,${chartHeight + yAxisMin})`)
+      .call(d3.axisBottom(x0)
+        .tickSizeInner(0)
+        .tickSizeOuter(0))
+      .selectAll("text").remove();
+  // team labels below x axis without line
+  g.append("g")
+      .attr("class", "axis")
+      .attr("transform", `translate(0,${chartHeight + chartHeight*.03})`)
+      .call(d3.axisBottom(x0)
+        .tickSizeInner(0)
+        .tickSizeOuter(0))
+      .attr("font-weight", "bold")
+      .select(".domain").remove();
+
+  // plot data
   g.append("g")
     .selectAll("g")
     .data(graphData)
@@ -71,36 +110,14 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
       })
       .attr("fill", function(d) { return colors(d.key); });
 
-  g.append("g")
-      .attr("class", "axis")
-      .attr("transform", `translate(0,${chartHeight + yAxisMin})`)
-      .call(d3.axisBottom(x0)
-        .tickSizeInner(0)
-        .tickSizeOuter(0))
-      .selectAll("text").remove();
-
-  g.append("g")
-      .attr("class", "axis")
-      .attr("transform", `translate(0,${chartHeight})`)
-      .call(d3.axisBottom(x0)
-        .tickSizeInner(0)
-        .tickSizeOuter(0))
-      .attr("font-weight", "bold")
-
-      .select(".domain").remove();
 
 
-  g.append("g")
-      .attr("class", "axis")
-      .call(d3.axisLeft(y)
-        .ticks(5, yAxisMeasure)
-        .tickSizeInner(3)
-        .tickSizeOuter(0));
 
+  // add title
   g.append("text")
     .style("text-anchor", "middle")
       .attr("x", chartWidth*.5)
-      .attr("y", 0)
+      .attr("y", -chartWidth*.02)
       .attr("fill", "#000")
       .attr("font-weight", "bold")
       .attr("font-size", "14")
