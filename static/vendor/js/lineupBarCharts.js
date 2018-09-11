@@ -57,12 +57,10 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
       .attr("class", "axis")
       .call(d3.axisLeft(y)
         .ticks(5, yAxisMeasure)
-        .tickSizeInner(3)
-        .tickSizeOuter(0))
+        .tickSize(0))
   // horizontal gridlines
   .append("g")
       .attr("class", "gridline")
-      .attr("stroke", "#777")
       .attr("stroke-width", ".25px")
       .call(d3.axisLeft(y)
         .ticks(5, yAxisMeasure)
@@ -78,16 +76,14 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
       .attr("class", "axis")
       .attr("transform", `translate(0,${chartHeight + yAxisMin})`)
       .call(d3.axisBottom(x0)
-        .tickSizeInner(0)
-        .tickSizeOuter(0))
+      .tickSize(0))
       .selectAll("text").remove();
   // team labels below x axis without line
   g.append("g")
       .attr("class", "axis")
       .attr("transform", `translate(0,${chartHeight + chartHeight*.03})`)
       .call(d3.axisBottom(x0)
-        .tickSizeInner(0)
-        .tickSizeOuter(0))
+        .tickSize(0))
       .attr("font-weight", "bold")
       .select(".domain").remove();
 
@@ -110,9 +106,6 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
       })
       .attr("fill", function(d) { return colors(d.key); });
 
-
-
-
   // add title
   g.append("text")
     .style("text-anchor", "middle")
@@ -124,11 +117,11 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
       .attr("text-anchor", "start")
       .text(graphTitle);
 
-
- var legendColorBoxSize = 15;
- var legendPaddingY = chartMargins.bottom - chartMargins.top;
- var legendPaddingX = svgWidth*.25;
- var legendKeysOffset = svgWidth*.2;
+  // add horizontal legend
+  var legendColorBoxSize = 15;
+  var legendPaddingY = chartMargins.bottom - chartMargins.top;
+  var legendPaddingX = svgWidth*.25;
+  var legendKeysOffset = svgWidth*.2;
 
   var legend = svg.append("g")
       .attr("width", svgWidth)
@@ -166,8 +159,6 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
   .style("text-anchor", "start")
           .attr("font-family", "sans-serif")
           .attr("font-size", 10);
-
-
 };
 
 
