@@ -36,7 +36,8 @@ metadata = MetaData()
 
 # we can reflect it ourselves from a database, using options
 # such as 'only' to limit what tables we look at...
-metadata.reflect(engine, only=['lineup_advanced_totals_stats',
+metadata.reflect(engine, only=['team_total_stats',
+                                'lineup_advanced_totals_stats',
                                 'lineup_base_per_100_stats',
                                 'lineup_scoring_totals_stats'])
 
@@ -51,6 +52,9 @@ Base.prepare()
 lineupAdvancedTotalsStats  = Base.classes.lineup_advanced_totals_stats
 lineupBasePer100Stats = Base.classes.lineup_base_per_100_stats
 lineupScoringTotalsStats = Base.classes.lineup_scoring_totals_stats
+teamTotalStats = Base.classes.team_total_stats
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -65,11 +69,19 @@ def nba_home():
 def lineup_comparison():
     return render_template('lineup_comparison.html')
 
-
+@app.route('/nba/lineup_team_name_year')
+def lineup_team_name_data():
+    season_id = request.args.get('seasonId')
+    query = session.query(teamTotalStats.TEAM_ID, teamTotalStats.TEAM_NAME)\
+                        .filter(teamTotalStats.SEASON_ID == season_id)\
+                        .order_by(teamTotalStats.TEAM_NAME.asc())
+    db_results = query.all()
+    teams_dict = [{'team_id': result[0], 'team_name': result[1]} for result in db_results]
+    return jsonify(teams_dict)
 
 
 def get_bar_shooting_graph_data(lineup_ids):
-    base_query = session.query(lineupAdvancedTotalsStats.TEAM_ABBREVIATION, ##NET_RATING
+    base_query = session.query(lineupAdvancedTotalsStats.TEAM_ABBREVIATION,
                             lineupAdvancedTotalsStats.EFG_PCT,
                             lineupAdvancedTotalsStats.TS_PCT,
                             lineupBasePer100Stats.FG3_PCT)

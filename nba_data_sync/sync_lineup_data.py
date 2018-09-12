@@ -38,7 +38,7 @@ def lineup_df_to_database(table_name, lineup_df):
         conn.execute(f'ALTER TABLE {table_name} ADD PRIMARY KEY (id);')
         ## conn.execute(f'ALTER TABLE team_colors ADD FOREIGN KEY (lineup_id) REFERENCES lineup(id);')
         conn.close()
-        print(f'    SUCCESSFULLY UPDATED {table_name}'
+        print(f'    SUCCESSFULLY UPDATED {table_name}')
 
 
 lineup_path = 'leaguedashlineups'
