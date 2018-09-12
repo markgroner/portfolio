@@ -48,7 +48,6 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
     var yAxisFormat = ".0%";
   } else {
     var yAxisMax = d3.max(graphData, function(d) { return d3.max(statKeys, function(key) { return d[key]; }); });
-    console.log(yAxisMax);
     if ((yAxisMin < -20) & (yAxisMin > 135)) {
       var yAxisTickValues = [-25, 0, 50, 100, 150];
     } else if ((yAxisMin < -20) & (yAxisMin > 135)) {

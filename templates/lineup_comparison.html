@@ -41,9 +41,10 @@
         <div class="row">
           <div class="col-sm-3" style="padding-left:12px; padding-right:0px;">
             <div class="form-group shiny-input-container">
-              <label class="control-label" for="team_season">Team Season:</label>
+              <label class="control-label" for="team1-season">Team 1 Season:</label>
               <div>
-                <select id="team_season"><option value="2017-18" selected>2017-18</option>
+                <select id="team1-season"><option value="2017-18" selected>2017-18</option>
+                  <!--
 <option value="2016-17">2016-17</option>
 <option value="2015-16">2015-16</option>
 <option value="2014-15">2014-15</option>
@@ -53,46 +54,19 @@
 <option value="2010-11">2010-11</option>
 <option value="2009-10">2009-10</option>
 <option value="2008-09">2008-09</option>
-<option value="2007-08">2007-08</option></select>
+<option value="2007-08">2007-08</option>
+-->
+</select>
+
                 <script type="application/json" data-for="team_season" data-nonempty="">{}</script>
               </div>
             </div>
           </div>
           <div class="col-sm-9" style="padding-left:12px; padding-right:12px;">
             <div class="form-group shiny-input-container" style="width: 100%;">
-              <label class="control-label" for="team">Team:</label>
+              <label class="control-label" for="team">Team 1:</label>
               <div>
-                <select id="team"><option value="Atlanta Hawks">Atlanta Hawks</option>
-<option value="Brooklyn Nets">Brooklyn Nets</option>
-<option value="Boston Celtics">Boston Celtics</option>
-<option value="Charlotte Hornets">Charlotte Hornets</option>
-<option value="Chicago Bulls">Chicago Bulls</option>
-<option value="Cleveland Cavaliers" selected>Cleveland Cavaliers</option>
-<option value="Dallas Mavericks">Dallas Mavericks</option>
-<option value="Denver Nuggets">Denver Nuggets</option>
-<option value="Detroit Pistons">Detroit Pistons</option>
-<option value="Golden State Warriors">Golden State Warriors</option>
-<option value="Houston Rockets">Houston Rockets</option>
-<option value="Indiana Pacers">Indiana Pacers</option>
-<option value="Los Angeles Clippers">Los Angeles Clippers</option>
-<option value="Los Angeles Lakers">Los Angeles Lakers</option>
-<option value="Memphis Grizzlies">Memphis Grizzlies</option>
-<option value="Miami Heat">Miami Heat</option>
-<option value="Milwaukee Bucks">Milwaukee Bucks</option>
-<option value="Minnesota Timberwolves">Minnesota Timberwolves</option>
-<option value="New Orleans Pelicans">New Orleans Pelicans</option>
-<option value="New York Knicks">New York Knicks</option>
-<option value="Oklahoma City Thunder">Oklahoma City Thunder</option>
-<option value="Orlanda Magic">Orlanda Magic</option>
-<option value="Philadelphia 76ers">Philadelphia 76ers</option>
-<option value="Phoenix Suns">Phoenix Suns</option>
-<option value="Portland Trailblazers">Portland Trailblazers</option>
-<option value="Sacramento Kings">Sacramento Kings</option>
-<option value="San Antonio Spurs">San Antonio Spurs</option>
-<option value="Toronto Raptors">Toronto Raptors</option>
-<option value="Utah Jazz">Utah Jazz</option>
-<option value="Washington Wizards">Washington Wizards</option></select>
-                <script type="application/json" data-for="team" data-nonempty="">{}</script>
+                <select id="team2-dropdown"></select>
               </div>
             </div>
           </div>
@@ -126,9 +100,10 @@
         <div class="row">
           <div class="col-sm-3" style="padding-left:12px; padding-right:0px;">
             <div class="form-group shiny-input-container">
-              <label class="control-label" for="opponent_season">Opponent Season:</label>
+              <label class="control-label" for="team2-season">Team 2 Season:</label>
               <div>
-                <select id="opponent_season"><option value="2017-18" selected>2017-18</option>
+                <select id="team2-season"><option value="2017-18" selected>2017-18</option>
+<!--
 <option value="2016-17">2016-17</option>
 <option value="2015-16">2015-16</option>
 <option value="2014-15">2014-15</option>
@@ -138,46 +113,18 @@
 <option value="2010-11">2010-11</option>
 <option value="2009-10">2009-10</option>
 <option value="2008-09">2008-09</option>
-<option value="2007-08">2007-08</option></select>
+<option value="2007-08">2007-08</option>
+-->
+</select>
                 <script type="application/json" data-for="opponent_season" data-nonempty="">{}</script>
               </div>
             </div>
           </div>
           <div class="col-sm-9" style="padding-left:12px; padding-right:12px;">
             <div class="form-group shiny-input-container" style="width: 100%;">
-              <label class="control-label" for="opponent">Opponent:</label>
+              <label class="control-label" for="opponent">Team 2:</label>
               <div>
-                <select id="opponent"><option value="Atlanta Hawks">Atlanta Hawks</option>
-<option value="Brooklyn Nets">Brooklyn Nets</option>
-<option value="Boston Celtics">Boston Celtics</option>
-<option value="Charlotte Hornets">Charlotte Hornets</option>
-<option value="Chicago Bulls">Chicago Bulls</option>
-<option value="Cleveland Cavaliers">Cleveland Cavaliers</option>
-<option value="Dallas Mavericks">Dallas Mavericks</option>
-<option value="Denver Nuggets">Denver Nuggets</option>
-<option value="Detroit Pistons">Detroit Pistons</option>
-<option value="Golden State Warriors" selected>Golden State Warriors</option>
-<option value="Houston Rockets">Houston Rockets</option>
-<option value="Indiana Pacers">Indiana Pacers</option>
-<option value="Los Angeles Clippers">Los Angeles Clippers</option>
-<option value="Los Angeles Lakers">Los Angeles Lakers</option>
-<option value="Memphis Grizzlies">Memphis Grizzlies</option>
-<option value="Miami Heat">Miami Heat</option>
-<option value="Milwaukee Bucks">Milwaukee Bucks</option>
-<option value="Minnesota Timberwolves">Minnesota Timberwolves</option>
-<option value="New Orleans Pelicans">New Orleans Pelicans</option>
-<option value="New York Knicks">New York Knicks</option>
-<option value="Oklahoma City Thunder">Oklahoma City Thunder</option>
-<option value="Orlanda Magic">Orlanda Magic</option>
-<option value="Philadelphia 76ers">Philadelphia 76ers</option>
-<option value="Phoenix Suns">Phoenix Suns</option>
-<option value="Portland Trailblazers">Portland Trailblazers</option>
-<option value="Sacramento Kings">Sacramento Kings</option>
-<option value="San Antonio Spurs">San Antonio Spurs</option>
-<option value="Toronto Raptors">Toronto Raptors</option>
-<option value="Utah Jazz">Utah Jazz</option>
-<option value="Washington Wizards">Washington Wizards</option></select>
-                <script type="application/json" data-for="opponent" data-nonempty="">{}</script>
+                <select id="team1-dropdown"></select>
               </div>
             </div>
           </div>
@@ -232,6 +179,7 @@
 </html>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="../static/vendor/js/lineupDropDownMenus.js"></script>
 <script src="../static/vendor/js/lineupBarCharts.js"></script>
 
 <script src="../static/vendor/jquery/jquery.min.js"></script>
