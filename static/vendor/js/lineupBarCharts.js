@@ -228,8 +228,7 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
 function updateBarGraphsShotChart() {
   var team1LineupId = d3.select("#team1-lineup-dropdown").node().value;
   var team2LineupId = d3.select("#team2-lineup-dropdown").node().value;
-  console.log(`team1LineupId - ${team1LineupId}`)
-  console.log(`team2LineupId - ${team2LineupId}`)
+  
   if (team1LineupId !== "" && team2LineupId !== "" ) {
     /* RATINGS GRAPH */
     d3.json(`../nba/grouped-bar-data?graphTitle=Ratings&team1LineupId=${team1LineupId}&team2LineupId=${team2LineupId}`, function(error, data) {
