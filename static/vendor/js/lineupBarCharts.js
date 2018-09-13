@@ -102,17 +102,18 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
     var yAxisFormat = ".0%";
   } else {
     var yAxisMax = d3.max(graphData, function(d) { return d3.max(statKeys, function(key) { return d[key]; }); });
-    if ((yAxisMin < -20) & (yAxisMin > 135)) {
+    if ((yAxisMin < -20) && (yAxisMin > 135)) {
       var yAxisTickValues = [-25, 0, 50, 100, 150];
-    } else if ((yAxisMin < -20) & (yAxisMin > 135)) {
+    } else if ((yAxisMin < -20) && (yAxisMin > 135)) {
       var yAxisTickValues = [-25, 0, 50, 100, 150];
-    } else if ((yAxisMin > -20) & (yAxisMin > 135)) {
+    } else if ((yAxisMin > -20) && (yAxisMin > 135)) {
       var yAxisTickValues = [0, 50, 100, 125, 150];
-    } else if ((yAxisMin > -20) & (yAxisMin < 135)) {
+    } else if ((yAxisMin > -20) && (yAxisMin < 135)) {
       var yAxisTickValues = [0, 50, 100];
     }
     var yAxisFormat = "";
   }
+
 
   var y = d3.scaleLinear()
       .rangeRound([chartHeight, 0])
@@ -138,7 +139,7 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
   // x axis without ticks
   g.append("g")
       .attr("class", "axis")
-      .attr("transform", `translate(0,${chartHeight + yAxisMin})`)
+      .attr("transform", `translate(0,${y(0)})`)
       .call(d3.axisBottom(x0)
       .tickSize(0))
       .selectAll("text").remove();
@@ -228,7 +229,7 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
 function updateBarGraphsShotChart() {
   var team1LineupId = d3.select("#team1-lineup-dropdown").node().value;
   var team2LineupId = d3.select("#team2-lineup-dropdown").node().value;
-  
+
   if (team1LineupId !== "" && team2LineupId !== "" ) {
     /* RATINGS GRAPH */
     d3.json(`../nba/grouped-bar-data?graphTitle=Ratings&team1LineupId=${team1LineupId}&team2LineupId=${team2LineupId}`, function(error, data) {
