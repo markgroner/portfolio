@@ -1,3 +1,54 @@
+/* Function to update values of team drop down menu */
+function updateTeamDropdownOptions(error, data, team) {
+  var teamDropdownId = `${team}-dropdown`;
+  var lineupDropdownId = `${team}-lineup-dropdown`;
+  var teamDropdown = document.getElementById(teamDropdownId)
+  teamDropdown.innerHTML = "";
+  for (var i = 0; i < data.length;  i++) {
+      var newOption = document.createElement("option");
+      newOption.value = data[i]["teamId"];
+      newOption.text = data[i]["teamName"];
+      teamDropdown.appendChild(newOption);
+  }
+  updateLineupDropdownOptions(teamDropdownId, lineupDropdownId);
+}
+
+
+
+/* TEAM 1 TEAM DROP DOWN */
+var team1Season = d3.select("#team1-season").node().value;
+
+d3.json(`../nba/lineup_team_name_year?seasonId=${team1Season}`, function(error, data) {
+  updateTeamDropdownOptions(error, data, "team1");
+});
+
+
+/* TEAM 2 TEAM DROP DOWN */
+var team2Season = d3.select("#team2-season").node().value;
+
+d3.json(`../nba/lineup_team_name_year?seasonId=${team2Season}`, function(error, data) {
+  updateTeamDropdownOptions(error, data, "team2");
+});
+
+
+
+/* Function to update values of lineup drop down menu */
+function updateLineupDropdownOptions(teamDropdownId, lineupDropdownId) {
+  var teamId = d3.select(`#${teamDropdownId}`).node().value;
+  d3.json(`../nba/lineup_names_id?teamId=${teamId}`, function(error, data) {
+    var lineupDropdown = document.getElementById(lineupDropdownId)
+    lineupDropdown.innerHTML = "";
+    for (var i = 0; i < data.length;  i++) {
+        var newOption = document.createElement("option");
+        newOption.value = data[i]["groupId"];
+        newOption.text = data[i]["groupName"];
+        lineupDropdown.appendChild(newOption);
+      }
+    updateBarGraphsShotChart();
+    });
+  }
+
+
 
 
 function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
@@ -5,7 +56,10 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
   if (error) throw error;
 
 
-  var barGraphDiv = d3.select(graphDivId);
+  document.getElementById(graphDivId).innerHTML = "";
+
+
+  var barGraphDiv = d3.select(`#${graphDivId}`);
   var svgHeight = barGraphDiv.node().getBoundingClientRect().height;
   var svgWidth = barGraphDiv.node().getBoundingClientRect().width;
 
@@ -171,32 +225,30 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
           .attr("font-size", 10);
 };
 
+function updateBarGraphsShotChart() {
+  var team1LineupId = d3.select("#team1-lineup-dropdown").node().value;
+  var team2LineupId = d3.select("#team2-lineup-dropdown").node().value;
+  console.log(`team1LineupId - ${team1LineupId}`)
+  console.log(`team2LineupId - ${team2LineupId}`)
+  if (team1LineupId !== "" && team2LineupId !== "" ) {
+    /* RATINGS GRAPH */
+    d3.json(`../nba/grouped-bar-data?graphTitle=Ratings&team1LineupId=${team1LineupId}&team2LineupId=${team2LineupId}`, function(error, data) {
+      plotNbaGroupedBar(error, data, "ratings_graph", "d");
+    });
 
+    /* SHOOTING GRAPH */
+    d3.json(`../nba/grouped-bar-data?graphTitle=Shooting&team1LineupId=${team1LineupId}&team2LineupId=${team2LineupId}`, function(error, data) {
+      plotNbaGroupedBar(error, data, "shooting_graph", "p");
+    });
 
-/* RATINGS GRAPH */
-d3.json("../nba/grouped-bar-data?graphTitle=Ratings", function(error, data) {
-  plotNbaGroupedBar(error, data, "#ratings_graph", "d");
-});
+    /* SCORING GRAPH */
+    d3.json(`../nba/grouped-bar-data?graphTitle=Scoring&team1LineupId=${team1LineupId}&team2LineupId=${team2LineupId}`, function(error, data) {
+      plotNbaGroupedBar(error, data, "scoring_graph", "p");
+    });
 
-/* SHOOTING GRAPH */
-d3.json("../nba/grouped-bar-data?graphTitle=Shooting", function(error, data) {
-  plotNbaGroupedBar(error, data, "#shooting_graph", "p");
-});
-
-/* SCORING GRAPH */
-d3.json("../nba/grouped-bar-data?graphTitle=Scoring", function(error, data) {
-  plotNbaGroupedBar(error, data, "#scoring_graph", "p");
-});
-
-/* REBOUNDING GRAPH */
-d3.json("../nba/grouped-bar-data?graphTitle=Rebounding", function(error, data) {
-  plotNbaGroupedBar(error, data, "#rebounding_graph", "p");
-});
-
-
-
-
-/* SHOOTING GRAPH */
-d3.json("../static/nba-grouped-bar-data.json", function(error, data) {
-  plotNbaGroupedBar(error, data, "#sample_data_graph", "d");
-});
+    /* REBOUNDING GRAPH */
+    d3.json(`../nba/grouped-bar-data?graphTitle=Rebounding&team1LineupId=${team1LineupId}&team2LineupId=${team2LineupId}`, function(error, data) {
+      plotNbaGroupedBar(error, data, "rebounding_graph", "p");
+    });
+  }
+}

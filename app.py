@@ -76,7 +76,30 @@ def lineup_team_name_data():
                         .filter(teamTotalStats.SEASON_ID == season_id)\
                         .order_by(teamTotalStats.TEAM_NAME.asc())
     db_results = query.all()
-    teams_dict = [{'team_id': result[0], 'team_name': result[1]} for result in db_results]
+    try:
+        db_results = query.all()
+        teams_dict = [{'teamId': result[0], 'teamName': result[1]} for result in db_results]
+    except sqlalchemy.exc.InternalError:
+        print('postgress error')
+        session.rollback()
+        teams_dict = {'error': 'database error'}
+
+    return jsonify(teams_dict)
+
+
+@app.route('/nba/lineup_names_id')
+def lineup_names_id_data():
+    team_id = request.args.get('teamId')
+    query = session.query(lineupAdvancedTotalsStats.GROUP_ID, lineupAdvancedTotalsStats.GROUP_NAME)\
+                        .filter(lineupAdvancedTotalsStats.TEAM_ID == team_id)\
+                        ##.order_by(teamTotalStats.TEAM_NAME.asc())
+    try:
+        db_results = query.all()
+        teams_dict = [{'groupId': result[0], 'groupName': result[1]} for result in db_results]
+    except sqlalchemy.exc.InternalError:
+        print('postgress error')
+        session.rollback()
+        teams_dict = {'error': 'database error'}
     return jsonify(teams_dict)
 
 
@@ -126,15 +149,31 @@ def get_bar_rebounding_graph_data(lineup_ids):
 def db_queries_to_data(db_queries, stat_keys, graph_title):
     team1_query = db_queries[0]
     team2_query = db_queries[1]
-    team1_results = team1_query.all()
-    team2_results = team2_query.all()
+    try:
+        team1_results = team1_query.all()
+    except sqlalchemy.exc.InternalError:
+        print('postgress error')
+        session.rollback()
+        team1_results = {'error': 'database error'}
+    try:
+        team2_results = team2_query.all()
+    except sqlalchemy.exc.InternalError:
+        print('postgress error')
+        session.rollback()
+        team2_results = {'error': 'database error'}
+    if team1_query[0][0] == team2_query[0][0]:
+        team1_abbr = f'{team1_query[0][0]} 1'
+        team2_abbr = f'{team2_query[0][0]} 2'
+    else:
+        team1_abbr = team1_query[0][0]
+        team2_abbr = team2_query[0][0]
     graph_data = {
         'graph_title': graph_title,
         'stat_key1': stat_keys[0],
         'stat_key2': stat_keys[1],
         'stat_key3': stat_keys[2],
-        'team1_abbr': team1_query[0][0],
-        'team2_abbr': team2_results[0][0],
+        'team1_abbr': team1_abbr,
+        'team2_abbr': team2_abbr,
         'team1_stat1': team1_query[0][1],
         'team1_stat2': team1_query[0][2],
         'team1_stat3': team1_query[0][3],
@@ -198,8 +237,8 @@ def create_bar_chart_json(data_dict):
 @app.route('/nba/grouped-bar-data')
 def group_bar_data():
     graph_title = request.args.get('graphTitle')
-    team1_lineup_id = '203109 - 2544 - 201567 - 201565 - 2747'
-    team2_lineup_id = '201939 - 201142 - 203110 - 2585 - 202691'
+    team1_lineup_id = request.args.get('team1LineupId')
+    team2_lineup_id = request.args.get('team2LineupId')
     lineup_ids = [team1_lineup_id, team2_lineup_id]
     if graph_title == 'Ratings':
         db_queries = get_bar_ratings_graph_data(lineup_ids)

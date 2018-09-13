@@ -43,22 +43,9 @@
             <div class="form-group shiny-input-container">
               <label class="control-label" for="team1-season">Team 1 Season:</label>
               <div>
-                <select id="team1-season"><option value="2017-18" selected>2017-18</option>
-                  <!--
-<option value="2016-17">2016-17</option>
-<option value="2015-16">2015-16</option>
-<option value="2014-15">2014-15</option>
-<option value="2013-14">2013-14</option>
-<option value="2012-13">2012-13</option>
-<option value="2011-12">2011-12</option>
-<option value="2010-11">2010-11</option>
-<option value="2009-10">2009-10</option>
-<option value="2008-09">2008-09</option>
-<option value="2007-08">2007-08</option>
--->
-</select>
-
-                <script type="application/json" data-for="team_season" data-nonempty="">{}</script>
+                <select id="team1-season">
+                  <option value="2017-18" selected>2017-18</option>
+                </select>
               </div>
             </div>
           </div>
@@ -66,17 +53,16 @@
             <div class="form-group shiny-input-container" style="width: 100%;">
               <label class="control-label" for="team">Team 1:</label>
               <div>
-                <select id="team2-dropdown"></select>
+                <select id="team1-dropdown" onchange="updateLineupDropdownOptions('team1-dropdown', 'team1-lineup-dropdown')"></select>
               </div>
             </div>
           </div>
         </div>
         <div class="row" style="padding-left:12px; padding-right:12px;">
           <div class="form-group shiny-input-container" style="width: 100%;">
-            <label class="control-label" for="team_lineup">Lineup:</label>
+            <label class="control-label" for="team1-lineup-dropdown">Lineup:</label>
             <div>
-              <select id="team_lineup"><option value="" selected></option></select>
-              <script type="application/json" data-for="team_lineup">{}</script>
+              <select id="team1-lineup-dropdown" onchange="updateBarGraphsShotChart()"></select>
             </div>
           </div>
         </div>
@@ -102,21 +88,9 @@
             <div class="form-group shiny-input-container">
               <label class="control-label" for="team2-season">Team 2 Season:</label>
               <div>
-                <select id="team2-season"><option value="2017-18" selected>2017-18</option>
-<!--
-<option value="2016-17">2016-17</option>
-<option value="2015-16">2015-16</option>
-<option value="2014-15">2014-15</option>
-<option value="2013-14">2013-14</option>
-<option value="2012-13">2012-13</option>
-<option value="2011-12">2011-12</option>
-<option value="2010-11">2010-11</option>
-<option value="2009-10">2009-10</option>
-<option value="2008-09">2008-09</option>
-<option value="2007-08">2007-08</option>
--->
-</select>
-                <script type="application/json" data-for="opponent_season" data-nonempty="">{}</script>
+                <select id="team2-season">
+                  <option value="2017-18" selected>2017-18</option>
+                </select>
               </div>
             </div>
           </div>
@@ -124,17 +98,16 @@
             <div class="form-group shiny-input-container" style="width: 100%;">
               <label class="control-label" for="opponent">Team 2:</label>
               <div>
-                <select id="team1-dropdown"></select>
+                <select id="team2-dropdown" onchange="updateLineupDropdownOptions('team2-dropdown', 'team2-lineup-dropdown')"></select>
               </div>
             </div>
           </div>
         </div>
         <div class="row" style="padding-left:12px; padding-right:12px;">
           <div class="form-group shiny-input-container" style="width: 100%;">
-            <label class="control-label" for="opponent_lineup">Lineup:</label>
+            <label class="control-label" for="team2-lineup-dropdown">Lineup:</label>
             <div>
-              <select id="opponent_lineup"><option value="" selected></option></select>
-              <script type="application/json" data-for="opponent_lineup">{}</script>
+              <select id="team2-lineup-dropdown" onchange="updateBarGraphsShotChart()"></select>
             </div>
           </div>
         </div>
@@ -179,7 +152,6 @@
 </html>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="../static/vendor/js/lineupDropDownMenus.js"></script>
 <script src="../static/vendor/js/lineupBarCharts.js"></script>
 
 <script src="../static/vendor/jquery/jquery.min.js"></script>
