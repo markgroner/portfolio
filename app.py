@@ -25,6 +25,8 @@ app = Flask(__name__)
 
 nba_db_username = nba_db_credentials['nba_db_username']
 nba_db_password = nba_db_credentials['nba_db_password']
+print(f'user name: nba_db_username')
+print(f'user pw: nba_db_password')
 ## Create sqlalchemy engine
 engine = create_engine(f'postgres://{nba_db_username}:{nba_db_password}@nba.cjcg4ksti8rr.us-east-2.rds.amazonaws.com:5432/nba')
 
