@@ -60,6 +60,11 @@ teamTotalStats = Base.classes.team_total_stats
 def home():
     return render_template('index.html')
 
+@app.route('/projects')
+def projects():
+    return render_template('projects.html')
+
+
 
 @app.route('/nba')
 def nba_home():
@@ -259,4 +264,5 @@ def group_bar_data():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(debug=True)
+    ##app.run(host='0.0.0.0', port=80)
