@@ -66,7 +66,7 @@ def projects():
 
 
 
-@app.route('/nba')
+@app.route('/nba/')
 def nba_home():
     return render_template('nba_index.html')
 
