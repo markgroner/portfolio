@@ -15,21 +15,22 @@
 
 .skills-list {
   list-style: none;
-  font-size: 14pt;
+  font-size: 12pt;
   margin-left: 6%;
   margin-right: 6%;
 }
 
 
-.contact-info-list {
-  list-style: none;
-  font-size: 14pt;
+.contact-info {
+  text-align: center;
+  font-size: 12pt;
   margin-left: 6%;
   margin-right: 6%;
 }
+
 
 .project-description-list {
-  font-size: 14pt;
+  font-size: 12pt;
   margin-left: 6%;
   margin-right: 6%;
 }
@@ -42,13 +43,13 @@
 
 }
 .col-md-12 {
-  font-size: 14pt;
+  font-size: 12pt;
   margin-top: 5%;
   margin-bottom: 5%;
 }
 
 p {
-  font-size: 14pt;
+  font-size: 12pt;
   margin-left: 6%;
   margin-right: 6%;
 }
