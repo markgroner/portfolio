@@ -6,19 +6,32 @@
     color: #2b2b2b;
 }
 
-ul {
-  list-style: none;
-  font-size: 14pt;
-}
+
 
 .page-head {
   background: #f4f4f4 url(../images/downtown.jpg) top center;
   height: 420px;
 }
 
-#skills-list {
-  font-size: 14px;
-  font-style: bold;
+.skills-list {
+  list-style: none;
+  font-size: 14pt;
+  margin-left: 6%;
+  margin-right: 6%;
+}
+
+
+.contact-list {
+  list-style: none;
+  font-size: 14pt;
+  margin-left: 6%;
+  margin-right: 6%;
+}
+
+.contact-description-list {
+  font-size: 14pt;
+  margin-left: 6%;
+  margin-right: 6%;
 }
 
 
