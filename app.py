@@ -56,25 +56,42 @@ lineupScoringTotalsStats = Base.classes.lineup_scoring_totals_stats
 teamTotalStats = Base.classes.team_total_stats
 
 
+'''
+Serves up the index.html
+'''
 @app.route('/')
 def home():
     return render_template('index.html')
 
+
+'''
+Serves up the projects.html
+'''
 @app.route('/projects')
 def projects():
     return render_template('projects.html')
 
 
-
+'''
+Serves up the nba_index.html
+'''
 @app.route('/nba/')
 def nba_home():
     return render_template('nba_index.html')
 
 
+'''
+Serves up the lineup_comparison.html
+'''
 @app.route('/nba/lineup_comparison')
 def lineup_comparison():
     return render_template('lineup_comparison.html')
 
+
+'''
+API route to return to list of lineup ids available for the selected teams lineup
+drop down menus in the lineup comparison dashboard
+'''
 @app.route('/nba/lineup_team_name_year')
 def lineup_team_name_data():
     season_id = request.args.get('seasonId')
@@ -89,26 +106,34 @@ def lineup_team_name_data():
         print('postgress error')
         session.rollback()
         teams_dict = {'error': 'database error'}
-
     return jsonify(teams_dict)
 
 
+'''
+API route to return to list of lineup ids available for the selected teams lineup
+drop down menus in the lineup comparison dashboard
+'''
 @app.route('/nba/lineup_names_id')
 def lineup_names_id_data():
     team_id = request.args.get('teamId')
     query = session.query(lineupAdvancedTotalsStats.GROUP_ID, lineupAdvancedTotalsStats.GROUP_NAME)\
                         .filter(lineupAdvancedTotalsStats.TEAM_ID == team_id)\
-                        ##.order_by(teamTotalStats.TEAM_NAME.asc())
     try:
         db_results = query.all()
-        teams_dict = [{'groupId': result[0], 'groupName': result[1]} for result in db_results]
+        lineups_dict = [{'groupId': result[0], 'groupName': result[1]} for result in db_results]
     except sqlalchemy.exc.InternalError:
         print('postgress error')
         session.rollback()
-        teams_dict = {'error': 'database error'}
-    return jsonify(teams_dict)
+        lineups_dict = {'error': 'database error'}
+    return jsonify(lineups_dict)
 
 
+'''
+This function creates a list of 2 sql alchemy query objects for the SHOOTING graph
+in the lineup comparison dashboard. The queries are ultimately executed in the
+db_queries_to_data function. It takes one argument:
+lineup_ids - a list of two lineup ids
+'''
 def get_bar_shooting_graph_data(lineup_ids):
     base_query = session.query(lineupAdvancedTotalsStats.TEAM_ABBREVIATION,
                             lineupAdvancedTotalsStats.EFG_PCT,
@@ -120,6 +145,12 @@ def get_bar_shooting_graph_data(lineup_ids):
     return db_queries
 
 
+'''
+This function creates a list of 2 sql alchemy query objects for the RATINGS graph
+in the lineup comparison dashboard. The queries are ultimately executed in the
+db_queries_to_data function. It takes one argument:
+lineup_ids - a list of two lineup ids
+'''
 def get_bar_ratings_graph_data(lineup_ids):
     base_query = session.query(lineupAdvancedTotalsStats.TEAM_ABBREVIATION,
                             lineupAdvancedTotalsStats.OFF_RATING,
@@ -130,6 +161,13 @@ def get_bar_ratings_graph_data(lineup_ids):
     db_queries = [team1_query, team2_query]
     return db_queries
 
+
+'''
+This function creates a list of 2 sql alchemy query objects for the SCORING graph
+in the lineup comparison dashboard. The queries are ultimately executed in the
+db_queries_to_data function. It takes one argument:
+lineup_ids - a list of two lineup ids
+'''
 def get_bar_scoring_graph_data(lineup_ids):
     base_query = session.query(lineupScoringTotalsStats.TEAM_ABBREVIATION,
                             lineupScoringTotalsStats.PCT_PTS_FT,
@@ -141,6 +179,12 @@ def get_bar_scoring_graph_data(lineup_ids):
     return db_queries
 
 
+'''
+This function creates a list of 2 sql alchemy query objects for the REBOUNDING graph
+in the lineup comparison dashboard. The queries are ultimately executed in the
+db_queries_to_data function. It takes one argument:
+lineup_ids - a list of two lineup ids
+'''
 def get_bar_rebounding_graph_data(lineup_ids):
     base_query = session.query(lineupAdvancedTotalsStats.TEAM_ABBREVIATION,
                             lineupAdvancedTotalsStats.OREB_PCT,
@@ -152,6 +196,14 @@ def get_bar_rebounding_graph_data(lineup_ids):
     return db_queries
 
 
+'''
+This function takes sqlalchemy query objects for grouped bar chart lineup
+data and executes them, and returns the data as a dictionary.
+The three arguments taken are:
+1. db_queries - a list with two sql alchemy query objects (one for each team)
+2. stat_keys - a list of the three stats measured in the grouped bar
+3. graph_title
+'''
 def db_queries_to_data(db_queries, stat_keys, graph_title):
     team1_query = db_queries[0]
     team2_query = db_queries[1]
@@ -189,7 +241,10 @@ def db_queries_to_data(db_queries, stat_keys, graph_title):
         }
     return graph_data
 
-
+'''
+Function that takes the grouped bar chart dictionary data and normalizes it
+into the JSON structure the application is expecting
+'''
 def create_bar_chart_json(data_dict):
     data = '''
     {
@@ -239,7 +294,13 @@ def create_bar_chart_json(data_dict):
     )
     return data
 
-
+'''
+Api route that returns the data necesssary for the grouped bar charts
+in the nba lineup comparison dashboard in JSON format. Takes three parameters
+1. graphTitle
+2. team1LineupId
+3. team2LineupId
+'''
 @app.route('/nba/grouped-bar-data')
 def group_bar_data():
     graph_title = request.args.get('graphTitle')
