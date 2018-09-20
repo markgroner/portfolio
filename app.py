@@ -1,15 +1,11 @@
 # import necessary libraries
-import numpy as np
 import pandas as pd
-import os
-import datetime
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, MetaData
 from config import nba_db_credentials
 from flask_sqlalchemy import SQLAlchemy
-##from sqlalchemy import func
 
 
 from flask import (
@@ -23,33 +19,46 @@ from flask import (
 app = Flask(__name__)
 
 
+
+'''
+Create sqlalchemy engine
+'''
 nba_db_username = nba_db_credentials['nba_db_username']
 nba_db_password = nba_db_credentials['nba_db_password']
-
-## Create sqlalchemy engine
 engine = create_engine(f'postgres://{nba_db_username}:{nba_db_password}@nba.cjcg4ksti8rr.us-east-2.rds.amazonaws.com:5432/nba')
 
-## Create a session
+'''
+Create a session
+'''
 session = Session(engine)
 
-# produce our own MetaData object
+
+'''
+Create a MetaData object
+'''
 metadata = MetaData()
 
-# we can reflect it ourselves from a database, using options
-# such as 'only' to limit what tables we look at...
+
+'''
+Reflect database tables onto the MetaData object
+'''
 metadata.reflect(engine, only=['team_total_stats',
                                 'lineup_advanced_totals_stats',
                                 'lineup_base_per_100_stats',
                                 'lineup_scoring_totals_stats'])
 
 
-# we can then produce a set of mappings from this MetaData.
+'''
+Produce a set of mappings from this MetaData and call prepare to set up mapped
+classes and relationships
+'''
 Base = automap_base(metadata=metadata)
-
-# calling prepare() just sets up mapped classes and relationships.
 Base.prepare()
 
-# mapped classes are ready
+
+'''
+Map class back to objects to be used in queries
+'''
 lineupAdvancedTotalsStats  = Base.classes.lineup_advanced_totals_stats
 lineupBasePer100Stats = Base.classes.lineup_base_per_100_stats
 lineupScoringTotalsStats = Base.classes.lineup_scoring_totals_stats
