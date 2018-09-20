@@ -1,4 +1,3 @@
-# import necessary libraries
 import pandas as pd
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
@@ -6,8 +5,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, MetaData
 from config import nba_db_credentials
 from flask_sqlalchemy import SQLAlchemy
-
-
 from flask import (
     Flask,
     render_template,
