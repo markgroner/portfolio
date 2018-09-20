@@ -117,7 +117,7 @@ drop down menus in the lineup comparison dashboard
 def lineup_names_id_data():
     team_id = request.args.get('teamId')
     query = session.query(lineupAdvancedTotalsStats.GROUP_ID, lineupAdvancedTotalsStats.GROUP_NAME)\
-                        .filter(lineupAdvancedTotalsStats.TEAM_ID == team_id)\
+                        .filter(lineupAdvancedTotalsStats.TEAM_ID == team_id)
     try:
         db_results = query.all()
         lineups_dict = [{'groupId': result[0], 'groupName': result[1]} for result in db_results]
@@ -325,5 +325,5 @@ def group_bar_data():
 
 
 if __name__ == "__main__":
-    ##app.run(debug=True)
-    app.run(host='0.0.0.0', port=80)
+    app.run(debug=True)
+    ##app.run(host='0.0.0.0', port=80)
