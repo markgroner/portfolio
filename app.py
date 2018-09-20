@@ -19,13 +19,13 @@ from flask import (
 app = Flask(__name__)
 
 
-
 '''
 Create sqlalchemy engine
 '''
 nba_db_username = nba_db_credentials['nba_db_username']
 nba_db_password = nba_db_credentials['nba_db_password']
 engine = create_engine(f'postgres://{nba_db_username}:{nba_db_password}@nba.cjcg4ksti8rr.us-east-2.rds.amazonaws.com:5432/nba')
+
 
 '''
 Create a session
