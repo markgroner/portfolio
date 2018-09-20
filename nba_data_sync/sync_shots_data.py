@@ -71,12 +71,8 @@ shots_params = {'PlayerID': player_id,
                 'VsDivision': ''
                 }
 shots_json = nba_api.nba_get_request(shots_path, shots_params)
-print(shots_json)
-
-
 shots_df, _ = nba_api.nba_json_to_df(shots_json)
-print(shots_df)
 shots_df.reset_index(inplace=True)
 shots_df.rename(columns={'index': 'id'}, inplace=True)
-print(shots_df)
-##shots_df_to_database(shots_table, shots_df)
+
+shots_df_to_database(shots_table, shots_df)
