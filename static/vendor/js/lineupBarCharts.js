@@ -72,18 +72,20 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
   var chartHeight = +svg.attr("height") - chartMargins.top - chartMargins.bottom;
 
 
-  var g = svg.append("g").attr("transform", "translate(" + chartMargins.left + "," + chartMargins.top + ")");
+  var g = svg.append("g")
+      .attr("transform", `translate(${chartMargins.left},${chartMargins.top})`);
   var teamAbbreviations = data.teamAbbreviations;
   var statKeys = data.statKeys;
   var graphData = data.graphData;
   var graphTitle = data.graphTitle;
 
-  // scale x to chart
+  // scale x groups to chart
   var x0 = d3.scaleBand()
       .rangeRound([0, chartWidth])
       .paddingInner(0.1)
       .domain(teamAbbreviations);
 
+  // scale x bars to chart
   var x1 = d3.scaleBand()
       .padding(0.05)
       .domain(statKeys).rangeRound([0, x0.bandwidth()]);
