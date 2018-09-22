@@ -338,7 +338,7 @@ It takes one argument:
 lineup_id
 '''
 def get_shot_chart_data(lineup_id):
-    base_query = session.query(shots.LOC_X, shots.LOC_Y, shots.SHOT_TYPE, shots.SHOT_MADE_FLAG)
+    base_query = session.query(shots.id, shots.LOC_X, shots.LOC_Y, shots.SHOT_TYPE, shots.SHOT_MADE_FLAG)
     query = base_query.filter(shots.LINEUP_ID == lineup_id)
     shots_df = pd.read_sql(query.statement, query.session.bind)
     return shots_df
@@ -355,7 +355,8 @@ def group_shots(shots_df): ##grouping_length=12): <- also known as scale_factor 
     shots_df['shot_type_numeric'] = [3 if type == '3PT Field Goal' else 2 for type in shots_df['SHOT_TYPE']]
     shots_df['efg_pct'] = shots_df['shot_type_numeric'] * shots_df['SHOT_MADE_FLAG'] / 2
     grouped_shots_df = shots_df.groupby(['x_plot_location', 'y_plot_location',\
-        'shot_type_numeric'], as_index=False)['efg_pct'].mean()
+        'shot_type_numeric'], as_index=False).agg({'id':'size', 'efg_pct':'mean'})\
+        .rename(columns={'id':'total_shots'})
     grouped_shots_df['distance'] = 0
     for index, row in grouped_shots_df.iterrows():
         x_plot_loc = grouped_shots_df.loc[index, 'x_plot_location']
@@ -384,6 +385,15 @@ def smooth_shots(grouped_shots_df):
     print(grouped_shots_df)
     return grouped_shots_df
 
+def temp_clean_up_until_smooth(grouped_shots_df):
+    final_df = grouped_shots_df[['x_plot_location','y_plot_location','efg_pct', 'total_shots']]\
+        .rename(columns={'x_plot_location':'shotLocX',
+                            'y_plot_location': 'shotLocY',
+                            'efg_pct': 'efgPct',
+                            'total_shots': 'totalShots'})
+    return final_df
+
+
 
 '''
 Api route to return shot chart data for the lineup data
@@ -393,8 +403,11 @@ def lineup_shots():
     lineup_id = request.args.get('lineupId')
     shots_df = get_shot_chart_data(lineup_id)
     grouped_shots_df = group_shots(shots_df)
-    smoothed_lineup_shots = smooth_shots(grouped_shots_df)
-    return jsonify(lineup_shots)
+    ##smoothed_lineup_shots = smooth_shots(grouped_shots_df)
+    ## temp to rename columns
+    final_df = temp_clean_up_until_smooth(grouped_shots_df)
+    json = final_df.to_json(orient='records')
+    return json
 
 
 

@@ -21,10 +21,12 @@ function plotShotChart(error, data, shotChartDivId) {
 
 
   var x = d3.scaleLinear()
-      .range([0, chartWidth]);
+      .range([0, chartWidth])
+      .domain([-25,25]);
 
   var y = d3.scaleLinear()
-      .range([chartHeight, 0]);
+      .range([chartHeight, 0])
+      .domain([-4,31]);
 
   var r = d3.scaleLinear()
       .range([7, 18]);
@@ -36,6 +38,28 @@ function plotShotChart(error, data, shotChartDivId) {
       .range([7, 18])
       .domain(d3.extent (data, function (d)  {return d.totalShots;}));
 
+  var efgShotGradient = ["#22316C", "#0046AD", "#D6D6C9", "#D0103A", "#8B0000"];
+  var colorScale = d3.scaleLinear()
+              .domain(linspace(0, 1, efgShotGradient.length))
+              .range(efgShotGradient);
+
+  function linspace(start, end, n) {
+      var out = [];
+      var delta = (end - start) / (n - 1);
+      var i = 0;
+      while(i < (n - 1)) {
+          out.push(start + (i * delta));
+          i++;
+      }
+      out.push(end);
+      return out;
+  }
+
+    // style points
+    d3.selectAll('circle')
+        .attr('fill', function(d) {
+            return colorScale(d.z);
+        });
 
   g.append("g")
       .attr("class", "x axis")
@@ -53,7 +77,7 @@ function plotShotChart(error, data, shotChartDivId) {
       .attr("r", function(d) { return r(d.totalShots); })
       .attr("cx", function(d) { return x(d.shotLocX); })
       .attr("cy", function(d) { return y(d.shotLocY); })
-      .style("fill", function(d) { return color(d.efgPct); });
+      .style("fill", function(d) { return colorScale(d.efgPct); });
 }
 
 
@@ -61,12 +85,12 @@ function plotShotChart(error, data, shotChartDivId) {
 
 
 
-d3.json("../static/vendor/shotChartData.json", function(error, data) {
+d3.json("../nba/lineup-shots?lineupId=1", function(error, data) {
   var shotChartDivId = "team_1_shot_chart";
   plotShotChart(error, data, shotChartDivId);
 });
 
-d3.json("../static/vendor/shotChartData.json", function(error, data) {
+d3.json("../nba/lineup-shots?lineupId=1", function(error, data) {
   var shotChartDivId = "team_2_shot_chart";
   plotShotChart(error, data, shotChartDivId);
 });
