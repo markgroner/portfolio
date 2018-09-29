@@ -56,12 +56,11 @@ function plotShotChart(error, data, shotChartDivId) {
       return out;
   }
 
-    // style points
-    d3.selectAll('circle')
-        .attr('fill', function(d) {
-            return colorScale(d.z);
-        });
-
+  // color points
+  g.selectAll('circle')
+      .attr('fill', function(d) {
+          return colorScale(d.z);
+      });
 
   // this section plots the actual data points
   g.selectAll(".dot")
@@ -72,7 +71,6 @@ function plotShotChart(error, data, shotChartDivId) {
       .attr("cx", function(d) { return x(d.shotLocX); })
       .attr("cy", function(d) { return y(d.shotLocY); })
       .style("fill", function(d) { return colorScale(d.efgPct); });
-
 
     // DRAWING THE COURT
     // baseline
@@ -147,17 +145,38 @@ function plotShotChart(error, data, shotChartDivId) {
       .attr("y1", y(-1.25))
       .attr("x2", x(3))
       .attr("y2", y(-1.25));
-
+    // left rim connector
+    g.append("line")
+      .style("stroke", "black")
+      .attr('stroke-width', 3)
+      .attr("x1", x(-.3))
+      .attr("y1", y(-.55))
+      .attr("x2", x(-.3))
+      .attr("y2", y(-1.25));
+    // right rim connector
+    g.append("line")
+      .style("stroke", "black")
+      .attr('stroke-width', 3)
+      .attr("x1", x(.3))
+      .attr("y1", y(-.55))
+      .attr("x2", x(.3))
+      .attr("y2", y(-1.25));
+    // rim
+    g.append("circle")
+      .style("stroke", "black")
+      .attr('stroke-width', 3)
+      .attr("fill", "none")
+      .attr("cx", x(0))
+      .attr("cy", y(0))
+      .attr("r", x(.775)-x(0));
     // free throw circle variables
     var freeThrowCircleRadius = (x(-6)-x(6))/2;
     var freeThrowCircleRadians = 2 * Math.PI;
     var freeThrowCirclePoints = 50; // points to draw lines between for circle the higher the better the circle
     var freeThrowCirclePercentOfCircle = 0.5; // .5 because we are drawing half circle at a time
-
     var freeThrowCircleAngleScaler = d3.scaleLinear()
       .domain([0, freeThrowCirclePoints-1])
       .range([0, freeThrowCircleRadians]);
-
     var freeThrowCircleLine = d3.radialLine()
       .radius(freeThrowCircleRadius)
       .angle((d, i) => {
@@ -166,26 +185,24 @@ function plotShotChart(error, data, shotChartDivId) {
         }
       });
     // top free throw circle
-    // won't look correct until size is held in the correct dimensions
     g.append("path")
       .datum(d3.range(freeThrowCirclePoints/2+1))
       .attr("class", "line")
     	.attr("transform", `translate(${x(0)},${y(13.75)}) rotate(90)`)
-      .attr("fill", "none")
+      .style("stroke", "black")
       .attr('stroke-width', 3)
-      .attr("d", freeThrowCircleLine)
-      .style("stroke", "black");
+      .attr("fill", "none")
+      .attr("d", freeThrowCircleLine);
     // top free throw circle
-    // won't look correct until size is held in the correct dimensions
     g.append("path")
       .datum(d3.range(freeThrowCirclePoints/2+1))
       .attr("class", "line")
     	.attr("transform", `translate(${x(0)},${y(13.75)}) rotate(-90)`)
+      .style("stroke", "black")
       .attr("fill", "none")
       .attr("stroke-dasharray", "22 23")
       .attr('stroke-width', 3)
-      .attr("d", freeThrowCircleLine)
-      .style("stroke", "black");
+      .attr("d", freeThrowCircleLine);
 
     // three point line
     var threePointArcGenerator = d3.line()
@@ -198,10 +215,10 @@ function plotShotChart(error, data, shotChartDivId) {
       threePointArcCoords.push(arcCoords);
     }
     g.append("path")
-     .attr("fill", "none")
-     .attr('stroke-width', 3)
- 	   .attr("d", threePointArcGenerator(threePointArcCoords))
-     .style("stroke", "black");
+      .style("stroke", "black")
+      .attr('stroke-width', 3)
+      .attr("fill", "none")
+ 	    .attr("d", threePointArcGenerator(threePointArcCoords));
 }
 
 
