@@ -35,7 +35,7 @@ function plotShotChart(error, data, shotChartDivId) {
   var color = d3.scaleOrdinal()
         .range(["#8c510a", "#dfc27d", "#35978f"]);
 
-  var r = d3.scaleLinear()
+  var size = d3.scaleLinear()
       .range([7, 18])
       .domain(d3.extent (data, function (d)  {return d.totalShots;}));
 
@@ -55,170 +55,170 @@ function plotShotChart(error, data, shotChartDivId) {
       out.push(end);
       return out;
   }
-
+  // this section plots the actual data points
+  g.selectAll(".point")
+    .data(data)
+    .enter().append("path")
+      .attr("class", "point")
+      .attr("d",
+        d3.symbol()
+        .type(d3.symbolSquare)
+        .size([1500])
+      )
+      .attr("d", d3.symbol().type(d3.symbolSquare).size(function(d) { return size(d.totalShots)} ))
+      .attr("transform", function(d) { return `translate(${x(d.shotLocX)},${y(d.shotLocY)})`})
+      .style("fill", function(d) { return colorScale(d.efgPct); });
   // color points
   g.selectAll('circle')
       .attr('fill', function(d) {
           return colorScale(d.z);
       });
-
-  // this section plots the actual data points
-  g.selectAll(".dot")
-    .data(data)
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", function(d) { return r(d.totalShots); })
-      .attr("cx", function(d) { return x(d.shotLocX); })
-      .attr("cy", function(d) { return y(d.shotLocY); })
-      .style("fill", function(d) { return colorScale(d.efgPct); });
-
-    // DRAWING THE COURT
-    // baseline
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(-25))
-      .attr("y1", y(-4))
-      .attr("x2", x(25))
-      .attr("y2", y(-4));
-    // left lane outter
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(-8))
-      .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
-      .attr("x2", x(-8))
-      .attr("y2", y(13.75));
-    // left lane inner
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(-6))
-      .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
-      .attr("x2", x(-6))
-      .attr("y2", y(13.75));
-    // right lane outter
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(8))
-      .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
-      .attr("x2", x(8))
-      .attr("y2", y(13.75));
-    // right lane inner
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(6))
-      .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
-      .attr("x2", x(6))
-      .attr("y2", y(13.75));
-    // free throw line
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(-8))
-      .attr("y1", y(13.75))
-      .attr("x2", x(8))
-      .attr("y2", y(13.75));
-    // straight line left side 3 point
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(-22))
-      .attr("y1", y(-4))
-      .attr("x2", x(-22))
-      .attr("y2", y(9));
-    // straight line left side 3 point
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(22))
-      .attr("y1", y(-4))
-      .attr("x2", x(22))
-      .attr("y2", y(9));
-    // backboard
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(-3))
-      .attr("y1", y(-1.25))
-      .attr("x2", x(3))
-      .attr("y2", y(-1.25));
-    // left rim connector
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(-.3))
-      .attr("y1", y(-.55))
-      .attr("x2", x(-.3))
-      .attr("y2", y(-1.25));
-    // right rim connector
-    g.append("line")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("x1", x(.3))
-      .attr("y1", y(-.55))
-      .attr("x2", x(.3))
-      .attr("y2", y(-1.25));
-    // rim
-    g.append("circle")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("fill", "none")
-      .attr("cx", x(0))
-      .attr("cy", y(0))
-      .attr("r", x(.775)-x(0));
-    // free throw circle variables
-    var freeThrowCircleRadius = (x(-6)-x(6))/2;
-    var freeThrowCircleRadians = 2 * Math.PI;
-    var freeThrowCirclePoints = 50; // points to draw lines between for circle the higher the better the circle
-    var freeThrowCirclePercentOfCircle = 0.5; // .5 because we are drawing half circle at a time
-    var freeThrowCircleAngleScaler = d3.scaleLinear()
-      .domain([0, freeThrowCirclePoints-1])
-      .range([0, freeThrowCircleRadians]);
-    var freeThrowCircleLine = d3.radialLine()
-      .radius(freeThrowCircleRadius)
-      .angle((d, i) => {
-        if(i < (freeThrowCirclePoints*freeThrowCirclePercentOfCircle +1)) {
-          return freeThrowCircleAngleScaler(i);
-        }
-      });
-    // top free throw circle
-    g.append("path")
-      .datum(d3.range(freeThrowCirclePoints/2+1))
-      .attr("class", "line")
-    	.attr("transform", `translate(${x(0)},${y(13.75)}) rotate(90)`)
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("fill", "none")
-      .attr("d", freeThrowCircleLine);
-    // top free throw circle
-    g.append("path")
-      .datum(d3.range(freeThrowCirclePoints/2+1))
-      .attr("class", "line")
-    	.attr("transform", `translate(${x(0)},${y(13.75)}) rotate(-90)`)
-      .style("stroke", "black")
-      .attr("fill", "none")
-      .attr("stroke-dasharray", "22 23")
-      .attr('stroke-width', 3)
-      .attr("d", freeThrowCircleLine);
-
-    // three point line
-    var threePointArcGenerator = d3.line()
-	    .curve(d3.curveCardinal);
-    var threePointArcPoints = 50;
-    var threePointArcCoords =[];
-    for (xRaw = -22; xRaw <= 22; xRaw += 44/threePointArcPoints) {
-      var yRaw = Math.sqrt(Math.pow(23.75,2)-Math.pow(xRaw,2));
-      var arcCoords = [x(xRaw), y(yRaw)];
-      threePointArcCoords.push(arcCoords);
-    }
-    g.append("path")
-      .style("stroke", "black")
-      .attr('stroke-width', 3)
-      .attr("fill", "none")
- 	    .attr("d", threePointArcGenerator(threePointArcCoords));
+  // DRAWING THE COURT
+  // baseline
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(-25))
+    .attr("y1", y(-4))
+    .attr("x2", x(25))
+    .attr("y2", y(-4));
+  // left lane outter
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(-8))
+    .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
+    .attr("x2", x(-8))
+    .attr("y2", y(13.75));
+  // left lane inner
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(-6))
+    .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
+    .attr("x2", x(-6))
+    .attr("y2", y(13.75));
+  // right lane outter
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(8))
+    .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
+    .attr("x2", x(8))
+    .attr("y2", y(13.75));
+  // right lane inner
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(6))
+    .attr("y1", y(-4)) //3.95 = 47.4 on other chart may be for line width in 4
+    .attr("x2", x(6))
+    .attr("y2", y(13.75));
+  // free throw line
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(-8))
+    .attr("y1", y(13.75))
+    .attr("x2", x(8))
+    .attr("y2", y(13.75));
+  // straight line left side 3 point
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(-22))
+    .attr("y1", y(-4))
+    .attr("x2", x(-22))
+    .attr("y2", y(9));
+  // straight line left side 3 point
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(22))
+    .attr("y1", y(-4))
+    .attr("x2", x(22))
+    .attr("y2", y(9));
+  // backboard
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(-3))
+    .attr("y1", y(-1.25))
+    .attr("x2", x(3))
+    .attr("y2", y(-1.25));
+  // left rim connector
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(-.3))
+    .attr("y1", y(-.55))
+    .attr("x2", x(-.3))
+    .attr("y2", y(-1.25));
+  // right rim connector
+  g.append("line")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("x1", x(.3))
+    .attr("y1", y(-.55))
+    .attr("x2", x(.3))
+    .attr("y2", y(-1.25));
+  // rim
+  g.append("circle")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("fill", "none")
+    .attr("cx", x(0))
+    .attr("cy", y(0))
+    .attr("r", x(.775)-x(0));
+  // free throw circle variables
+  var freeThrowCircleRadius = (x(-6)-x(6))/2;
+  var freeThrowCircleRadians = 2 * Math.PI;
+  var freeThrowCirclePoints = 50; // points to draw lines between for circle the higher the better the circle
+  var freeThrowCirclePercentOfCircle = 0.5; // .5 because we are drawing half circle at a time
+  var freeThrowCircleAngleScaler = d3.scaleLinear()
+    .domain([0, freeThrowCirclePoints-1])
+    .range([0, freeThrowCircleRadians]);
+  var freeThrowCircleLine = d3.radialLine()
+    .radius(freeThrowCircleRadius)
+    .angle((d, i) => {
+      if(i < (freeThrowCirclePoints*freeThrowCirclePercentOfCircle +1)) {
+        return freeThrowCircleAngleScaler(i);
+      }
+    });
+  // top free throw circle
+  g.append("path")
+    .datum(d3.range(freeThrowCirclePoints/2+1))
+    .attr("class", "line")
+  	.attr("transform", `translate(${x(0)},${y(13.75)}) rotate(90)`)
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("fill", "none")
+    .attr("d", freeThrowCircleLine);
+  // top free throw circle
+  g.append("path")
+    .datum(d3.range(freeThrowCirclePoints/2+1))
+    .attr("class", "line")
+  	.attr("transform", `translate(${x(0)},${y(13.75)}) rotate(-90)`)
+    .style("stroke", "black")
+    .attr("fill", "none")
+    .attr("stroke-dasharray", "18 21")
+    .attr('stroke-width', 3)
+    .attr("d", freeThrowCircleLine);
+  // three point line
+  var threePointArcGenerator = d3.line()
+     .curve(d3.curveCardinal);
+  var threePointArcPoints = 50;
+  var threePointArcCoords =[];
+  for (xRaw = -22; xRaw <= 22; xRaw += 44/threePointArcPoints) {
+    var yRaw = Math.sqrt(Math.pow(23.75,2)-Math.pow(xRaw,2));
+    var arcCoords = [x(xRaw), y(yRaw)];
+    threePointArcCoords.push(arcCoords);
+  }
+  g.append("path")
+    .style("stroke", "black")
+    .attr('stroke-width', 3)
+    .attr("fill", "none")
+    .attr("d", threePointArcGenerator(threePointArcCoords));
 }
 
 
