@@ -65,7 +65,7 @@ shots = Base.classes.shots
 
 
 '''
-Serves up the index.html
+URL for the portfolio homepage
 '''
 @app.route('/')
 def home():
@@ -73,7 +73,7 @@ def home():
 
 
 '''
-Serves up the projects.html
+URL for the projects page
 '''
 @app.route('/projects')
 def projects():
@@ -81,7 +81,7 @@ def projects():
 
 
 '''
-Serves up the nba_index.html
+URL for the nba homepage
 '''
 @app.route('/nba/')
 def nba_home():
@@ -89,7 +89,7 @@ def nba_home():
 
 
 '''
-Serves up the lineup_comparison.html
+URL for the nba lineups dashboard
 '''
 @app.route('/nba/lineup_comparison')
 def lineup_comparison():
@@ -408,7 +408,6 @@ def lineup_shots():
     final_df = temp_clean_up_until_smooth(grouped_shots_df)
     json = final_df.to_json(orient='records')
     return json
-
 
 
 if __name__ == "__main__":

@@ -11,67 +11,55 @@ function plotShotChart(error, data, shotChartDivId) {
       .attr("width", svgWidth)
       .attr("height", svgHeight);
 
-  var chartMargins = {top: svgHeight*.1, bottom: svgHeight*.1, left: 0, right:0} //left: svgWidth*.1, right: svgWidth*.1};
-  var chartHeight = +svg.attr("height") - chartMargins.top - chartMargins.bottom; //600
+  var chartMargins = {top: svgHeight*.1, bottom: svgHeight*.1, left: 0, right:0};
+  var chartHeight = +svg.attr("height") - chartMargins.top - chartMargins.bottom;
   var chartWidth = chartHeight * (30/21) //court size ratio
   chartMargins['left'] = (svgWidth - chartWidth)/2;
   chartMargins['right'] = (svgWidth - chartWidth)/2;
 
   var g = svg.append("g")
-      .attr("transform", `translate(${chartMargins.left},${chartMargins.top})`);
-
+    .attr("transform", `translate(${chartMargins.left},${chartMargins.top})`);
 
   var x = d3.scaleLinear()
-      .range([0, chartWidth])
-      .domain([-25,25]);
+    .range([0, chartWidth])
+    .domain([-25,25]);
 
   var y = d3.scaleLinear()
-      .range([chartHeight, 0])
-      .domain([-4,31]);
-
-  var r = d3.scaleLinear()
-      .range([7, 18]);
-
-  var color = d3.scaleOrdinal()
-        .range(["#8c510a", "#dfc27d", "#35978f"]);
+    .range([chartHeight, 0])
+    .domain([-4,31]);
 
   var size = d3.scaleLinear()
-      .range([7, 18])
-      .domain(d3.extent (data, function (d)  {return d.totalShots;}));
-
-  var efgShotGradient = ["#22316C", "#0046AD", "#D6D6C9", "#D0103A", "#8B0000"];
-  var colorScale = d3.scaleLinear()
-              .domain(linspace(0, 1, efgShotGradient.length))
-              .range(efgShotGradient);
+    .range([25, 200])
+    .domain(d3.extent (data, function (d)  {return d.totalShots;}));
 
   function linspace(start, end, n) {
-      var out = [];
-      var delta = (end - start) / (n - 1);
-      var i = 0;
-      while(i < (n - 1)) {
-          out.push(start + (i * delta));
-          i++;
-      }
-      out.push(end);
-      return out;
+    var out = [];
+    var delta = (end - start) / (n - 1);
+    var i = 0;
+    while(i < (n - 1)) {
+        out.push(start + (i * delta));
+        i++;
+    }
+    out.push(end);
+    return out;
   }
+  var efgShotGradient = ["#22316C", "#0046AD", "#D6D6C9", "#D0103A", "#8B0000"];
+  var color = d3.scaleLinear()
+    .domain(linspace(0, 1, efgShotGradient.length))
+    .range(efgShotGradient);
+
   // this section plots the actual data points
   g.selectAll(".point")
     .data(data)
     .enter().append("path")
       .attr("class", "point")
-      .attr("d",
-        d3.symbol()
-        .type(d3.symbolSquare)
-        .size([1500])
-      )
       .attr("d", d3.symbol().type(d3.symbolSquare).size(function(d) { return size(d.totalShots)} ))
       .attr("transform", function(d) { return `translate(${x(d.shotLocX)},${y(d.shotLocY)})`})
-      .style("fill", function(d) { return colorScale(d.efgPct); });
+      .style("fill", function(d) { return color(d.efgPct); });
   // color points
   g.selectAll('circle')
       .attr('fill', function(d) {
-          return colorScale(d.z);
+          return color(d.z);
       });
   // DRAWING THE COURT
   // baseline
@@ -220,14 +208,6 @@ function plotShotChart(error, data, shotChartDivId) {
     .attr("fill", "none")
     .attr("d", threePointArcGenerator(threePointArcCoords));
 }
-
-
-
-
-
-
-
-
 
 
 d3.json("../nba/lineup-shots?lineupId=1", function(error, data) {
