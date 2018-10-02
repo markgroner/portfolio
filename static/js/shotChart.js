@@ -28,9 +28,9 @@ function plotShotChart(error, data, shotChartDivId) {
     .range([chartHeight, 0])
     .domain([-4,31]);
 
-  var size = d3.scaleLinear()
-    .range([25, 200])
-    .domain(d3.extent (data, function (d)  {return d.totalShots;}));
+  var size = d3.scaleLog()
+    .range([10, 200])
+    .domain(d3.extent (data, function (d)  {return d.totalShots;})).nice();
 
   function linspace(start, end, n) {
     var out = [];
@@ -55,7 +55,7 @@ function plotShotChart(error, data, shotChartDivId) {
       .attr("class", "point")
       .attr("d", d3.symbol().type(d3.symbolSquare).size(function(d) { return size(d.totalShots)} ))
       .attr("transform", function(d) { return `translate(${x(d.shotLocX)},${y(d.shotLocY)})`})
-      .style("fill", function(d) { return color(d.efgPct); });
+      .style("fill", function(d) { return color(d.smoothedEfgPct); });
   // color points
   g.selectAll('circle')
       .attr('fill', function(d) {
