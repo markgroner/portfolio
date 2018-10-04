@@ -36,7 +36,7 @@ d3.json(`../nba/lineup_team_name_year?seasonId=${team2Season}`, function(error, 
 function updateLineupDropdownOptions(teamDropdownId, lineupDropdownId) {
   var teamId = d3.select(`#${teamDropdownId}`).node().value;
   d3.json(`../nba/lineup_names_id?teamId=${teamId}`, function(error, data) {
-    var lineupDropdown = document.getElementById(lineupDropdownId)
+    var lineupDropdown = document.getElementById(lineupDropdownId);
     lineupDropdown.innerHTML = "";
     for (var i = 0; i < data.length;  i++) {
         var newOption = document.createElement("option");
@@ -45,8 +45,13 @@ function updateLineupDropdownOptions(teamDropdownId, lineupDropdownId) {
         lineupDropdown.appendChild(newOption);
       }
     updateBarGraphsShotChart();
-    });
-  }
+    if (teamDropdownId == "team1-dropdown") {
+      updateShotChart(1);
+    } else {
+      updateShotChart(2);
+    }
+  });
+};
 
 
 
@@ -72,18 +77,20 @@ function plotNbaGroupedBar(error, data, graphDivId, yAxisMeasure) {
   var chartHeight = +svg.attr("height") - chartMargins.top - chartMargins.bottom;
 
 
-  var g = svg.append("g").attr("transform", "translate(" + chartMargins.left + "," + chartMargins.top + ")");
+  var g = svg.append("g")
+      .attr("transform", `translate(${chartMargins.left},${chartMargins.top})`);
   var teamAbbreviations = data.teamAbbreviations;
   var statKeys = data.statKeys;
   var graphData = data.graphData;
   var graphTitle = data.graphTitle;
 
-  // scale x to chart
+  // scale x groups to chart
   var x0 = d3.scaleBand()
       .rangeRound([0, chartWidth])
       .paddingInner(0.1)
       .domain(teamAbbreviations);
 
+  // scale x bars to chart
   var x1 = d3.scaleBand()
       .padding(0.05)
       .domain(statKeys).rangeRound([0, x0.bandwidth()]);
