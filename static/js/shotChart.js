@@ -213,6 +213,8 @@ function updateShotChart(teamNumber) {
   var teamLineupId = d3.select(`#team${teamNumber}-lineup-dropdown`).node().value;
   d3.json(`../nba/lineup-shots?lineupId=${teamLineupId}`, function(error, data) {
     var shotChartDivId = `team_${teamNumber}_shot_chart`;
+    var shotChartDiv = document.getElementById(shotChartDivId)
+    shotChartDiv.innerHTML = "";
     plotShotChart(error, data, shotChartDivId);
   });
 }
