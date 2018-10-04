@@ -209,7 +209,34 @@ function plotShotChart(error, data, shotChartDivId) {
     .attr("d", threePointArcGenerator(threePointArcCoords));
 }
 
+function updateShotChart(teamNumber) {
+  var teamLineupId = d3.select(`#team${teamNumber}-lineup-dropdown`).node().value;
+  d3.json(`../nba/lineup-shots?lineupId=${teamLineupId}`, function(error, data) {
+    var shotChartDivId = `team_${teamNumber}_shot_chart`;
+    plotShotChart(error, data, shotChartDivId);
+  });
+}
 
+/*
+function updateShotChartData() {
+  var team2LineupId = d3.select("#team2-lineup-dropdown").node().value;
+  /*
+  if (team1LineupId !== "") {
+    updateShotChart1()
+  };
+  */
+  /*
+  if (team2LineupId !== "") {
+    d3.json(`../nba/lineup-shots?lineupId=${team2LineupId}`, function(error, data) {
+      var shotChartDivId = "team_1_shot_chart";
+      plotShotChart(error, data, shotChartDivId);
+    });
+  };
+}
+
+updateShotChartData();
+*/
+/*
 d3.json("../nba/lineup-shots?lineupId=1", function(error, data) {
   var shotChartDivId = "team_1_shot_chart";
   plotShotChart(error, data, shotChartDivId);
@@ -219,7 +246,7 @@ d3.json("../nba/lineup-shots?lineupId=1", function(error, data) {
   var shotChartDivId = "team_2_shot_chart";
   plotShotChart(error, data, shotChartDivId);
 });
-
+*/
 /*
 d3.csv("../static/vendor/shotChartData.csv", function(error, data) {
   var shotChartDivId = "team_2_shot_chart";

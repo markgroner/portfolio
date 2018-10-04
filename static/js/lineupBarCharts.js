@@ -36,7 +36,7 @@ d3.json(`../nba/lineup_team_name_year?seasonId=${team2Season}`, function(error, 
 function updateLineupDropdownOptions(teamDropdownId, lineupDropdownId) {
   var teamId = d3.select(`#${teamDropdownId}`).node().value;
   d3.json(`../nba/lineup_names_id?teamId=${teamId}`, function(error, data) {
-    var lineupDropdown = document.getElementById(lineupDropdownId)
+    var lineupDropdown = document.getElementById(lineupDropdownId);
     lineupDropdown.innerHTML = "";
     for (var i = 0; i < data.length;  i++) {
         var newOption = document.createElement("option");
@@ -45,8 +45,13 @@ function updateLineupDropdownOptions(teamDropdownId, lineupDropdownId) {
         lineupDropdown.appendChild(newOption);
       }
     updateBarGraphsShotChart();
-    });
-  }
+    if (teamDropdownId == "team1-dropdown") {
+      updateShotChart(1);
+    } else {
+      updateShotChart(2);
+    }
+  });
+};
 
 
 

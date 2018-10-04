@@ -1,5 +1,5 @@
 import pandas as pd
-import sqlalchemy
+## import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, MetaData
@@ -43,7 +43,7 @@ metadata.reflect(engine, only=['team_total_stats',
                                 'lineup_advanced_totals_stats',
                                 'lineup_base_per_100_stats',
                                 'lineup_scoring_totals_stats',
-                                'shots'])
+                                'shots_w_id'])
 
 
 '''
@@ -61,7 +61,7 @@ lineupAdvancedTotalsStats  = Base.classes.lineup_advanced_totals_stats
 lineupBasePer100Stats = Base.classes.lineup_base_per_100_stats
 lineupScoringTotalsStats = Base.classes.lineup_scoring_totals_stats
 teamTotalStats = Base.classes.team_total_stats
-shots = Base.classes.shots
+shots = Base.classes.shots_w_id
 
 
 '''
@@ -100,7 +100,7 @@ Redirects NBA lineup comparison from old rout
 '''
 @app.route('/nba/lineup_comparison')
 def lineup_comparison_redirect():
-    return redirect('http://markgroner.com/nba/lineup-comparison', code=302)
+    return redirect(url_for('lineup_comparison'), code=302)
 
 
 '''
@@ -311,9 +311,9 @@ in the lineup comparison dashboard.
 It takes one argument:
 lineup_id
 '''
-def get_shot_chart_data(lineup_id):
+def get_shot_chart_data(player_ids):
     base_query = session.query(shots.id, shots.LOC_X, shots.LOC_Y, shots.SHOT_TYPE, shots.SHOT_MADE_FLAG)
-    query = base_query.filter(shots.LINEUP_ID == lineup_id)
+    query = base_query.filter(shots.PLAYER_ID.in_(player_ids))
     shots_df = pd.read_sql(query.statement, query.session.bind)
     return shots_df
 
@@ -390,7 +390,9 @@ Api route to return shot chart data for the lineup data
 @app.route('/nba/lineup-shots')
 def lineup_shots():
     lineup_id = request.args.get('lineupId')
-    shots_df = get_shot_chart_data(lineup_id)
+    player_ids = lineup_id.split(' - ')
+    player_ids = [int(player_id) for player_id in player_ids]
+    shots_df = get_shot_chart_data(player_ids)
     grouped_shots_df = group_shots(shots_df)
     smoothed_lineup_shots = smooth_shots(grouped_shots_df, 6, 3)
     json = smoothed_lineup_shots.to_json(orient='records')
@@ -398,5 +400,5 @@ def lineup_shots():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, threaded=True)
-    ##app.run(host='0.0.0.0', port=80, threaded=True)
+    ##app.run(debug=True, threaded=True)
+    app.run(host='0.0.0.0', port=80, threaded=True)

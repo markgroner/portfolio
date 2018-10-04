@@ -68,7 +68,7 @@
               <div class="form-group shiny-input-container" style="width: 100%;">
                 <label class="control-label" for="team1-lineup-dropdown">Lineup:</label>
                 <div>
-                  <select id="team1-lineup-dropdown" onchange="updateBarGraphsShotChart()"></select>
+                  <select id="team1-lineup-dropdown" onchange="updateBarGraphsShotChart(); updateShotChart(1);"></select>
                 </div>
               </div>
             </div>
@@ -113,7 +113,7 @@
               <div class="form-group shiny-input-container" style="width: 100%;">
                 <label class="control-label" for="team2-lineup-dropdown">Lineup:</label>
                 <div>
-                  <select id="team2-lineup-dropdown" onchange="updateBarGraphsShotChart()"></select>
+                  <select id="team2-lineup-dropdown" onchange="updateBarGraphsShotChart(); updateShotChart(2);"></select>
                 </div>
               </div>
             </div>
